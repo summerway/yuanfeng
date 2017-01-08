@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <include file="Public:meta" />
+</head>
+<body style="padding-top: 60px;">
+    <include file="Public:header" />
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <include file="Public:lefter" />
+
+        <div class="content iphone-frame-fix" style="margin:0; padding:2px; overflow:hidden;">
+            <iframe id="iframeMain" name="iframeMain" style="width:100%;" frameborder="0" src="{:U('Board/'.$menuNow.'/index')}" onLoad="reinitIframe();"></iframe>
+        </div>
+    </div>
+    <include file="Public:footer" />
+</div>
+
+<script type="text/javascript" src="__JS__/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="__JS__/bootstrap.js"></script>
+    <script>
+        function reinitIframe(){
+            var iframe = document.getElementById("iframeMain");
+            try{
+                var bHeight = iframe.contentWindow.document.body.scrollHeight;
+                var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+                var height = Math.max(bHeight, dHeight);
+                iframe.height = height;
+            }catch (ex){}
+        }
+
+        var timer1 = window.setInterval("reinitIframe()", 500); //定时开始
+
+        function reinitIframeEND(){
+            var iframe = document.getElementById("iframeMain");
+            try{
+                var bHeight = iframe.contentWindow.document.body.scrollHeight;
+                var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+                var height = Math.max(bHeight, dHeight);
+                iframe.height = height;
+            }catch (ex){}
+// 停止定时
+            window.clearInterval(timer1);
+
+        }
+
+        $(function() {
+            // 设置高度
+            $(window).resize(function() {
+                resizeMain();
+            });
+
+            // 
+            resizeMain();
+
+            // 退出后台
+            $("#btn_logout").click(function() {
+                my_show_dialog_confirm("确定要退出后台么？", null, null);
+            });
+
+            // 菜单点击
+            $(".menu_item").click(function() {
+                //
+                $(".lefter .cur").removeClass("cur");
+                $(this).addClass("cur");
+                //菜单点击需要强制加上scrolling auto(避免页面中设置scrolling=no,再点击菜单始终为scrolling=no状态
+                var iframe =  document.getElementById("iframeMain");
+                $(iframe).attr("scrolling","auto");
+            });
+
+            // 菜单滑动
+            $("#accordion").accordion({
+                header : "> div > h3",
+                collapsible: true,
+                heightStyle: "fill"
+            }).sortable({
+                axis : "y",
+                handle : "h3",
+                stop : function(event, ui) {
+                    ui.item.children("h3").triggerHandler("focusout");
+                }
+            });
+
+            // 刷新后打开当前菜单
+            if ( !$(".cur:visible")[0] ) {
+                $(".cur").parents("div.group").children("h3").trigger("click");
+            }
+
+        });
+
+    </script>
+</body>
+</html>

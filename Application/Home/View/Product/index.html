@@ -1,0 +1,96 @@
+<include file='Public:header'/>
+<script type="text/javascript" src="__JS__/modernizr.custom.js"></script>
+<script type="text/javascript" src="__JS__/jquery.dlmenu.js"></script>
+
+<script type="text/javascript" language="javascript"> 
+    function iFrameHeight() { 
+        var ifm= document.getElementById("iframepage"); 
+        var subWeb = document.frames ? document.frames["iframepage"].document : ifm.contentDocument; 
+        if(ifm != null && subWeb != null) { 
+            ifm.height = subWeb.body.scrollHeight; 
+            //ifm.width =subWeb.body.scrollWidth;
+        } 
+    } 
+    function choice($a) { 
+        document.getElementById("iframepage").src=$a; 
+    }
+
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+    //menu
+    $( '#dl-menu' ).dlmenu({
+        animationClasses : { classin : 'dl-animate-in-2', classout : 'dl-animate-out-2' }
+    });
+
+});
+
+</script>
+
+    <!-- Start Content -->
+    <div id="content">
+    
+          <!-- Start Topbar -->
+        <div id="product" class="top-title">
+            <div class="section-title">
+                <h2>产品介绍 / <em>Our product</em></h2>
+            </div>
+        </div>
+        <!-- End Topbar -->
+
+        <!-- Start Features -->
+        <div class="sidebars one-fourth-divider">
+
+            <!-- Start Left Side --> 
+            <div class="sidebar one-fourth-seg left">
+
+                <div class="container demo-5">  
+
+
+                    <div class="main clearfix">
+
+                        <div style="float: left;width: 50%;min-height: 500px;min-width: 300px;position: relative;">
+                            <div id="dl-menu" class="dl-menuwrapper">
+                                <button onclick="choice('__URL__/productList/')">Open Menu</button>
+                                <ul class="dl-menu">
+
+                                    <volist name="nav" id="item">
+                                       <li>
+                                           <a onclick="setTimeout(function () { choice('__URL__/productList?cate={$item.id}') }, 500);">{$item.name}</a>
+                                           <ul class="dl-submenu">
+                                               <volist name="item.children" id="vo">
+                                                   <li><a onclick="choice('__URL__/productList?type={$key}')">{$vo}</a></li>
+                                               </volist>
+                                           </ul>
+                                       </li>
+                                   </volist>
+
+                                </ul>
+                            </div><!-- /dl-menuwrapper -->
+                        </div>
+                    </div>
+                </div><!-- /container -->
+
+            </div>
+            <!-- End Left Side -->
+
+            <!-- Start Right Side --> 
+            <div class="sidebar three-fourth-seg right">
+                <iframe src="__URL__/productList" id="iframepage" name="iframepage" frameBorder="0px"  scrolling="auto" width="100%" onLoad="iFrameHeight()"></iframe>
+
+            </div>
+            <!-- End Right Side -->
+
+        <div class="clear"></div>
+        </div>
+        <!-- End Features -->
+
+    <div class="horizon-line"></div>
+    </div>
+    <!-- End Content -->
+
+</div>
+<!-- End Wrapper -->
+
+<include file='Public:footer'/>
