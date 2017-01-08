@@ -1,0 +1,45 @@
+html,
+body {
+	overflow-x: hidden; /* Prevent scroll on narrow devices */
+	font-family: 굴림, 돋움, Seoul, 한강체;
+}
+body {
+	padding-top: 40px;
+}
+footer {
+	padding: 30px 0;
+}
+
+.float_search {
+	position: fixed;
+	right:0;
+	top:5px;
+	z-index: 10;
+}
+
+.list_pic {
+	margin-top:5px;
+	border: 0;
+}
+
+.list_pic_s {
+	margin: 0 0 15px;
+}
+
+.list_product p {
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 18px;
+	color: rgb(102, 102, 102);
+	margin: 0;
+}
+
+.list-unstyled li{
+	padding: 5px 0;
+}
+
+.nav_right p {
+	color: #777;
+	font-size: 13px;
+	font-weight: bold;
+}
