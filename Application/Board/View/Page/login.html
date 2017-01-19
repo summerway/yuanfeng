@@ -52,7 +52,7 @@
                 </div>
                     <!--<a href="#" class="forgot">Forgot password?</a>-->
                 <div class="remember">
-                    <input id="remember-me" name="remember" type="checkbox">
+                    <input id="remember-me" name="remember" type="checkbox" />
                     <label for="remember-me">Remember me</label>
                 </div>
                 <input class="btn-glow primary login"  id="verify" type="submit" value="Login in"/>
@@ -75,6 +75,9 @@
 <!-- pre load bg imgs -->
 <script type="text/javascript">
     $(function () {
+
+        getCookieInfo();
+
         document.onkeydown = function(e)
         {
             var ev = document.all ? window.event : e;
@@ -134,8 +137,26 @@
                 return false; // required to block normal submit since you used ajax
             }
         });
-
     });
+
+    function getCookieInfo(){
+        $.ajax({
+            type: "post",
+            url: "__URL__/ajaxLoginInfo",
+            success: function (rtn){
+                console.info(rtn)
+                if(rtn.status){
+                    $("input[name='account']").val(rtn.list['account']);
+                    $("input[name='password']").val(rtn.list['password']);
+                    if(1 == rtn.list['remember'] || 'on' == rtn.list['remember']){
+                        $("#remember-me").attr("checked", true);
+                    }
+                }else{
+                    $("#login_form").get(0).reset();
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>

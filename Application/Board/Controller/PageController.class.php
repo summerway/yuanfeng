@@ -7,6 +7,7 @@
  */
 namespace Board\Controller;
 
+use Board\Model\Config;
 use Think\Controller;
 use Think\Verify;
 
@@ -94,24 +95,45 @@ class PageController extends Controller {
         if(!$auth_info){
             $this->ajaxReturn(make_rtn('account does not exist!'));
         }else{
-            if ($auth_info['password'] != hash('md5',$post['password'])) {
-                $this->ajaxReturn(make_rtn('the password is invalid!'));
+
+            if($cookie = cookie(C('USER_AUTH_KEY'))){
+                //cookie login
+                if ($cookie['password'] != hash('md5',$auth_info['password'].$auth_info['account'])) {
+                    $this->ajaxReturn(make_rtn('the password is invalid!'));
+                }
+            }else{
+                //regular login
+                if ($auth_info['password'] != hash('md5',$post['password'])) {
+                    $this->ajaxReturn(make_rtn('the password is invalid!'));
+                }
             }
 
             clear_last_session($auth_info['session_id']);
-            $_SESSION[C('USER_AUTH_KEY')] = [
-                'id' => $auth_info['id'],
-                'account' => $auth_info['account'],
-                'nickname' => $auth_info['nickname'],
-                'email' => $auth_info['email']
-            ];
+            session(C('USER_AUTH_KEY'),$auth_info['id']);
+            session('user_info', filterParams($auth_info,['account','nickname','email']));
 
             //save login data
             $data = array('id' => $auth_info['id'], 'last_login_time' => time(), 'login_count' => array('exp', 'login_count+1'),
                 'last_login_ip' => get_client_ip(), 'session_id' => session_id());
 
+            //save cookie
+            if('on' == $post['remember'] || 1 == $post['remember']){
+                cookie(C('USER_AUTH_KEY'),['account' => $post['account'],'password' => hash('md5',hash('md5',$post['password']).$post['account']),'remember' => $post['remember']],['expire' => 30 * ONE_DAY]);
+            }else{
+                cookie(C('USER_AUTH_KEY'),null);
+            }
+
             $rs = M('rbac_user')->save($data);
             $this->ajaxReturn(make_url_rtn('login success',U('Index/index')));
+        }
+    }
+
+    public function ajaxLoginInfo(){
+        $info = cookie(C('USER_AUTH_KEY'));
+        if($info){
+            $this->ajaxReturn(['status' => true,'list' => $info]);
+        }else{
+            $this->ajaxReturn(make_rtn(Config::NO_DATA));
         }
     }
 

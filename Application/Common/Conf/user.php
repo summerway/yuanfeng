@@ -10,7 +10,7 @@
  * 常量定义
  */
 const ONE_DAY = 86400;    // 1天的时间戳数值
-const TWO_HOURS = 7200;      // 2小时时间戳数值
+const ONE_HOUR = 3600;      // 1小时时间戳数值
 
 return array(
     //page

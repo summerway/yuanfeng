@@ -23,6 +23,8 @@ class Config{
     const UPDATE_COMPLETED_RETURN = "Update the data successfully <br/> return to the list after 2 seconds";
     const UPDATE_FAILED = "update failed";
 
+    const NO_DATA = "No matching records found";
+
     static function getProductConf(){
         $item = ['size','category','type'];
         $conf = [];
