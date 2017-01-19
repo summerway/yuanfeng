@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html class="login-bg">
+<head>
+    <include file="Public:meta" />
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="__CSS__/compiled/signin.css" type="text/css" media="screen" />
+    
+    
+</head>
+<body>
+<!-- background switcher -->
+<div class="bg-switch visible-desktop">
+    <div class="bgs">
+        <a href="#" data-img="landscape.jpg" class="bg active">
+            <img src="__IMG__/bgs/landscape.jpg" />
+        </a>
+        <a href="#" data-img="blueish.jpg" class="bg">
+            <img src="__IMG__/bgs/blueish.jpg" />
+        </a>
+        <a href="#" data-img="7.jpg" class="bg">
+            <img src="__IMG__/bgs/7.jpg" />
+        </a>
+        <a href="#" data-img="8.jpg" class="bg">
+            <img src="__IMG__/bgs/8.jpg" />
+        </a>
+        <a href="#" data-img="9.jpg" class="bg">
+            <img src="__IMG__/bgs/9.jpg" />
+        </a>
+        <a href="#" data-img="10.jpg" class="bg">
+            <img src="__IMG__/bgs/10.jpg" />
+        </a>
+        <a href="#" data-img="11.jpg" class="bg">
+            <img src="__IMG__/bgs/11.jpg" />
+        </a>
+    </div>
+</div>
+
+
+<div class="login-wrapper">
+    <img class="logo" src="__IMG__/logo-white.png">
+
+    <div class="box">
+        <div class="content-wrap">
+            <form id="login_form" >
+                <h6>Log in</h6>
+                <input class="form-control" type="text" name="account" placeholder="Your Account">
+                <input class="form-control" type="password" name="password" placeholder="Your password">
+                <!--<a href="#" class="forgot">Forgot password?</a>-->
+                <div class="remember">
+                    <input id="remember-me" name="remember" type="checkbox">
+                    <label for="remember-me">Remember me</label>
+                </div>
+                <input class="btn-glow primary login"  id="verify" type="submit" value="Login in"/>
+            </form>
+        </div>
+    </div>
+
+    <!--<div class="no-account">
+        <p>Don't have an account?</p>
+        <a href="signup.html">Sign up</a>
+    </div>-->
+</div>
+
+<!-- scripts -->
+<include file="Public:js_basic" />
+<!-- this page specific script -->
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+<script src="__JS__/additional-methods.js"></script>
+
+<!-- pre load bg imgs -->
+<script type="text/javascript">
+    $(function () {
+        document.onkeydown = function(e)
+        {
+            var ev = document.all ? window.event : e;
+            if(ev.keyCode==13)
+            {
+                $("#verify").trigger("click");
+            }
+        }
+
+        // bg switcher
+        var $btns = $(".bg-switch .bg");
+        $btns.click(function (e) {
+            e.preventDefault();
+            $btns.removeClass("active");
+            $(this).addClass("active");
+            var bg = $(this).data("img");
+
+            $("html").css("background-image", "url('__IMG__/bgs/" + bg + "')");
+        });
+
+        //form validate
+        $("#login_form").validate({
+            rules: {
+                account: "required",
+                password: {
+                    required: true,
+                    minlength: 6
+                }
+            },
+            submitHandler: function (form) {
+                /* Get input values from form */
+                var values = $(form).serializeArray();
+
+                /* Because serializeArray() ignores unset checkboxes and radio buttons: */
+                var _values = values.concat(
+                    $("#form input[type=checkbox]:not(:checked)").map(
+                        function() {
+                            return {"name": this.name, "value": -1}
+                        }).get()
+                );
+                $.ajax({
+                    type: "post",
+                    url: "__URL__/checkLogin",
+                    data: _values,
+                    success: function (rtn){
+                        if(rtn.status){
+                            window.setTimeout(function(){
+                                if ( rtn.url != undefined ) {
+                                    window.location.href = rtn.url;
+                                }
+                            }, 2000);
+                        }else{
+                            alert(rtn.info);
+                        }
+                    }
+                });
+                return false; // required to block normal submit since you used ajax
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

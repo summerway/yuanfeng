@@ -12,6 +12,23 @@ namespace Think;
 /**
  * ThinkPHP Model模型类
  * 实现了ORM和ActiveRecords模式
+ * @method  Model order()  order(string $param)
+ * @method  Model alias()  alias(string $param)
+ * @method  Model group()  group(string $param)
+ * @method  Model having
+ * @method  Model lock()   lock(bool $param)
+ * @method  Model distinct
+ * @method  Model auto
+ * @method  Model filter
+ * @method  Model validate
+ * @method  Model result
+ * @method  Model token
+ * @method  Model index
+ * @method  int count()   count(string $param)
+ * @method  int sum()   sum(string $param)
+ * @method  int min()   min(string $param)
+ * @method  int max()   max(string $param)
+ * @method  int avg()   avg(string $param)
  */
 class Model {
     // 操作状态

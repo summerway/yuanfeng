@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <include file="Public:meta" />
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="__CSS__/compiled/user-list.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="__VD__/jqPagination/css/jqpagination.css" media="all" type="text/css" />
+</head>
+<body>
+<div id="pad-wrapper" class="users-list">
+    <div class="row header">
+        <div class="col-md-12" style="margin: 10px 0;">
+            <div class="col-md-2">
+                <h3>Product List</h3>
+            </div>
+
+            <form id="form_sch">
+            <div class="col-md-10 search-list">
+                <dl >
+                    <dt>Name</dt>
+                    <input type="text" class="col-md-5 search" placeholder="type product name" value="">
+                    <a class="btn-flat primary pull-right" id="btn_search">Search</a>
+                </dl>
+                <dl>
+                    <dt>Status</dt>
+                    <select id="status">
+                        <option value="">--</option>
+                        <option value="1">active</option>
+                        <option value="-1">forbidden</option>
+                    </select>
+                </dl>
+                <dl>
+                    <dt>Size</dt>
+                    <select id="size">
+
+                    </select>
+                </dl>
+                <dl>
+                    <dt>Category</dt>
+                    <select id="category">
+
+                    </select>
+                </dl>
+                <dl>
+                    <dt>Type</dt>
+                    <select id="type">
+
+                    </select>
+                </dl>
+            </div>
+            </form>
+        </div>
+        <div style="margin-right: 40px;">
+            <a href="__URL__/add" class="btn-flat success pull-right" >
+                <span>&#43;</span>new product
+            </a>
+        </div>
+    </div>
+
+    <!-- Users table -->
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-hover" id="product_list">
+                <thead>
+                <tr>
+                    <th class="sortable">
+                        Product
+                    </th>
+                    <th class="sortable">
+                        <span class="line"></span>Size
+                    </th>
+                    <th class="sortable">
+                        <span class="line"></span>Category
+                    </th>
+                    <th class="sortable">
+                        <span class="line"></span>Type
+                    </th>
+                    <th class="sortable">
+                        <span class="line"></span>Price
+                    </th>
+                    <th class="sortable">
+                        <span class="line"></span>Manufacturer
+                    </th>
+                    <th class="sortable">
+                        <span class="line"></span>Origin
+                    </th>
+                    <th class="sortable">
+                        <span class="line"></span>Status
+                    </th>
+                    <th class="sortable">
+                        <span class="line"></span>Action
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="list_content">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="margin: 20px 0;display: inline-block;">
+        <label>Show </label>
+            <select id="list-rows" aria-controls="user-list" class="">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+             </select>
+        <label>entries</label>
+    </div>
+    <div class="pagination pull-right">
+        <a href="#" class="first" data-action="first">&laquo;</a>
+        <a href="#" class="previous" data-action="previous">&lsaquo;</a>
+        <input type="text" readonly="readonly" data-max-page="40" />
+        <a href="#" class="next" data-action="next">&rsaquo;</a>
+        <a href="#" class="last" data-action="last">&raquo;</a>
+    </div>
+    <!-- end users table -->
+</div>
+
+<include file="Public:js_basic" />
+
+<!-- this page specific script -->
+<script src="__JS__/jquery-ui-1.10.2.custom.min.js"></script>
+<script src="__VD__/jqPagination/js/jquery.jqpagination.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        //init config
+        $.ajax({
+            type: "post",
+            url: "__URL__/ajaxConf",
+            success: function (rtn){
+                if(rtn.status){
+                    $.each(rtn.list,function(index,value){
+                        var element = "#" + index;
+                        var html = '<option value="">--</option>';
+                        $.each(value,function(index,value){
+                            html+= '<option value="'+ index +'">'+ value + '</option>';
+                        })
+
+                        $(element).append(html);
+                    })
+                }else{
+                    alert(rtn.info);
+                }
+            }
+        });
+        //event
+        $('#btn_search').click(function(){
+            loadList(1);
+            return;
+        })
+
+        $("#list-rows").change(function(){
+            loadList(1);
+            return;
+        })
+
+        $(document).on("click", "a[name='cs-btn']", function(){
+            var _id = $(this).attr('tag');
+            var _status = $(this).text().trim().toLowerCase() == 'active' ? 1 : -1;
+            $.ajax({
+                type: "POST",
+                url: "__URL__/changeStatus",
+                data: {id:_id,status:_status},
+                dataType: "json",
+                success: function(rtn) {
+                    if(rtn){
+                        var current_page = $('.pagination').jqPagination('option','current_page');
+                        loadList(current_page);
+                    }
+                }
+            })
+        });
+
+        //auto loading
+        loadList(1);
+    });
+
+    function loadList(page){
+        var _name = $("#name").val();
+        var _type = $("#type").val();
+        var _cate = $('#category').val();
+        var _status = $("#status").val();
+        var _size = $("#size").val();
+        var _listRows = $("#list-rows").val();
+
+        $.ajax({
+            type: "POST",
+            url: "__URL__/dataList",
+            data: {name:_name,type:_type, category:_cate,size:_size,status:_status,page:page,listRows:_listRows},
+            dataType: "json",
+            success: function(data){
+                if(data.status){
+                    var item = data.list;
+                    var $content = $('#list_content');
+                    $content.empty();
+                    var html = '';
+                    if(false == item){
+                        var colspan = $("#product_list th").length;
+                        html += '<tr><td colspan="'+ colspan +'" style="text-align: center;color: #999;">No matching records found</td></tr>';
+                    }else{
+                        for(var i=0;i<item.length;i++){
+                            html+='<tr>';
+                            html+='<td><img src="'+item[i]['image']+'" class="img-circle avatar hidden-phone" />';
+                            html+='<a href="user-profile.html" class="name">'+item[i]['name']+'</a>';
+                            html+='<span class="subtext">'+item[i]['code']+'</span>';
+
+                            html+="<td>"+item[i]['size']+"</td>";
+                            html+="<td>"+item[i]['category']+"</td>";
+                            html+="<td>"+item[i]['type']+"</td>";
+                            html+='<td>CNY:&yen;'+item[i]['price_cn']+'<span class="subtext"><br/> KRW:&#8361;'+item[i]['price_kr']+'</span></td>';
+                            html+="<td>"+item[i]['manufacturer']+"</td>";
+                            html+="<td>"+item[i]['origin']+"</td>";
+                            html+="<td>"+(1 == item[i]['status'] ? '<span class="label label-success">Active</span> ' : '<span class="label label-danger">Forbidden</span>')+"</td>";
+                            html+= '<td><a class="btn btn-info btn-sm" href="__URL__/edit?id=' + item[i]['id'] + '" >Edit</a>' +
+                                '<a class="btn ' + (1 == item[i]['status']  ? 'btn-danger' : 'btn-success')  +' btn-sm" ' +
+                                'style="margin-left: 20px;" name="cs-btn" tag="'+ item[i]['id'] +'">'
+                                + (1 == item[i]['status']  ? 'Disable' : 'Active') +'</a></td>'
+                            html+="</tr>";
+                        }
+                    }
+                    $content.append(html);
+
+                    //pagination
+                    $('.pagination').jqPagination({
+                        max_page:data.max_page,
+                        paged: function(page) {
+                            // do something with the page variable
+                            loadList(page);
+                        }
+                    });
+                }else{
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

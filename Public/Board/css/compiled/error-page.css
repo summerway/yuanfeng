@@ -1,0 +1,29 @@
+body{
+    background:url("../../img/404/bg.png");
+    margin:0;
+    font-family: 'Amarante', cursive;
+}
+.wrap{
+    margin:0 auto;
+    width:1000px;
+}
+.logo{
+    text-align:center;
+}
+.logo p span{
+    color:lightgreen;
+}
+.sub a{
+    color:white;
+    background:rgba(0,0,0,0.3);
+    text-decoration:none;
+    padding:5px 10px;
+    font-size:13px;
+    font-family: arial, serif;
+    font-weight:bold;
+    cursor: pointer;
+}
+.footer a{
+    font-size:16px;
+    color:#ff4800;
+}

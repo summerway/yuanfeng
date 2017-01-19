@@ -1,0 +1,20 @@
+label.error {
+    color:#c73939;
+    width: 300px !important;
+    margin-left: 10px;
+    line-height: 25px
+}
+
+.return-btn {
+    margin:5px 15px;
+}
+
+.form-text-malength {
+    line-height: 30px;
+    color: #999;
+}
+
+.search-list { float:right; text-align:right; }
+.search-list dl { float:right; margin:0 10px 5px 0; height:25px; }
+.search-list dl dt { float:left; padding:3px 5px; }
+.search-list .btn-flat { margin:-3px 0 0 10px ;}

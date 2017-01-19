@@ -2,131 +2,172 @@
 <html lang="en">
 <head>
     <include file="Public:meta" />
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="__CSS__/compiled/new-user.css" type="text/css" media="screen" />
 </head>
 <body>
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container-fluid">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="#">Strass Administration</a>
-            <div class="btn-group pull-right">
-                <a class="btn" href="my-profile.html"><i class="icon-user"></i> Admin</a>
-                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="my-profile.html">Profile</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Logout</a></li>
-                </ul>
-            </div>
-            <div class="nav-collapse">
-                <ul class="nav">
-                    <li><a href="index.html">Home</a></li>
-                    <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Users <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="new-user.html">New User</a></li>
-                            <li class="divider"></li>
-                            <li><a href="users.html">Manage Users</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Roles <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="new-role.html">New Role</a></li>
-                            <li class="divider"></li>
-                            <li><a href="roles.html">Manage Roles</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="stats.html">Stats</a></li>
-                </ul>
-            </div>
+<div id="pad-wrapper" class="new-user">
+    <div class="row header">
+        <div class="col-md-12">
+            <h3>Modify</h3>
+            <a class="btn-flat success return-btn" href="__URL__"> return list </a>
         </div>
     </div>
-</div>
 
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span3">
-            <div class="well sidebar-nav">
-                <ul class="nav nav-list">
-                    <li class="nav-header"><i class="icon-wrench"></i> Administration</li>
-                    <li class="active"><a href="users.html">Users</a></li>
-                    <li><a href="roles.html">Roles</a></li>
-                    <li class="nav-header"><i class="icon-signal"></i> Statistics</li>
-                    <li><a href="stats.html">General</a></li>
-                    <li><a href="user-stats.html">Users</a></li>
-                    <li><a href="visitor-stats.html">Visitors</a></li>
-                    <li class="nav-header"><i class="icon-user"></i> Profile</li>
-                    <li><a href="my-profile.html">My profile</a></li>
-                    <li><a href="#">Settings</a></li>
-                    <li><a href="#">Logout</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="span9">
-            <div class="row-fluid">
-                <div class="page-header">
-                    <h1>New User <small>User registration</small></h1>
-                </div>
-                <form class="form-horizontal">
-                    <fieldset>
-                        <div class="control-group">
-                            <label class="control-label" for="name">Name</label>
-                            <div class="controls">
-                                <input type="text" class="input-xlarge" id="name" />
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="email">E-mail</label>
-                            <div class="controls">
-                                <input type="text" class="input-xlarge" id="email" />
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="pnohe">Phone</label>
-                            <div class="controls">
-                                <input type="text" class="input-xlarge" id="phone" />
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="city">City</label>
-                            <div class="controls">
-                                <input type="text" class="input-xlarge" id="city" />
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="role">Role</label>
-                            <div class="controls">
-                                <select id="role">
-                                    <option value="admin">Admin</option>
-                                    <option value="mod">Moderator</option>
-                                    <option value="user" selected>User</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label" for="active">Active?</label>
-                            <div class="controls">
-                                <input type="checkbox" id="active" value="1" />
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <input type="submit" class="btn btn-success btn-large" value="Save User" /> <a class="btn" href="users.html">Cancel</a>
-                        </div>
-                    </fieldset>
+    <div class="row form-wrapper">
+        <!-- left column -->
+        <div class="col-md-9 with-sidebar">
+            <div class="container">
+                <form id="form" class="new_user_form">
+                    <div class="col-md-12 field-box">
+                        <label for="account">Account:</label>
+                        <input class="col-md-6 form-control" type="text" id="account" name="account" value="{$vo.account}"/>
+                    </div>
+                    <div class="col-md-12 field-box">
+                        <label for="nickname">Nickname:</label>
+                        <input class="col-md-6 form-control" type="text" id="nickname" name="nickname" value="{$vo.nickname}"/>
+                    </div>
+                    <div class="col-md-12 field-box">
+                        <label for="email">Email:</label>
+                        <input class="col-md-6 form-control" type="email" id="email" name="email" value="{$vo.email}"/>
+                    </div>
+                    <div class="col-md-12 field-box">
+                        <label for="mobile">Phone:</label>
+                        <input class="col-md-6 form-control" type="text" id="mobile" name="mobile" value="{$vo.mobile}"/>
+                    </div>
+                    <div class="col-md-12 field-box">
+                        <label for="status">Active?</label>
+                        <input type="checkbox" value="1" id="status" name="status" <eq name="vo.status" value="1">checked</eq> />
+                    </div>
+                    <div class="col-md-12 field-box textarea">
+                        <label for="notes">Notes:</label>
+                        <textarea class="col-md-6" id="notes" name="notes" placeholder="Field limited to 100 characters" maxlength="100">{$vo.notes}</textarea>
+                        <p class="form-text-malength"><span id="desc-limit" style="color:red;">0</span>/100</p>
+                    </div>
+                    <div class="col-md-6 field-box actions">
+                        <input type="hidden" id="id" name="id" value="{$vo.id}"/>
+                        <input type="submit" class="btn-glow primary" value="Modify user">
+                        <span>OR</span>
+                        <input type="reset" value="Cancel" class="reset">
+                    </div>
                 </form>
             </div>
         </div>
-    </div>
 
-    <include file="Public:footer" />
+        <!-- side right column -->
+       <div class="col-md-3 form-sidebar pull-right">
+           <div class="alert alert-info hidden-tablet">
+               Reset Password
+           </div>
+           <form id="passwd_form" class="new_user_form">
+               <div class="col-md-6 field-box">
+                   <label for="origin_passwd">origin password:</label>
+                   <input class="col-md-6 form-control" type="password" id="origin_passwd" name="origin_passwd" />
+               </div>
+               <div class="col-md-6 field-box">
+                   <label for="new_password">new password:</label>
+                   <input class="col-md-6 form-control" type="password" id="new_password" name="new_passwd" />
+               </div>
+               <div class="col-md-6 field-box">
+                   <label for="repasswd">Confirm password:</label>
+                   <input class="col-md-6 form-control" type="password" id="repasswd" name="repasswd" />
+               </div>
+               <div class="col-md-6 field-box actions">
+                   <input type="hidden" name="id" value="{$vo.id}"/>
+                   <input type="submit" class="btn-glow primary" value="submit">
+                   <span>OR</span>
+                   <input type="reset" value="Cancel" class="reset">
+               </div>
+           </form>
+       </div>
+    </div>
 </div>
 
-<script type="text/javascript" src="__JS__/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="__JS__/bootstrap.js"></script>
+<include file="Public:js_basic" />
+<!-- this page specific script -->
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+<script src="__JS__/additional-methods.js"></script>
+
+<script>
+    $().ready(function() {
+        $("#notes").unbind('keyup change input paste').bind('keyup change input paste',function(){
+            $("#desc-limit").text($(this).val().length);
+        })
+
+        $("#passwd_form").validate({
+            rules: {
+                origin_passwd: {
+                    required: true,
+                    minlength: 6
+                },
+                new_passwd: {
+                    required: true,
+                    minlength: 6
+                },
+                repasswd: {
+                    required: true,
+                    minlength: 6,
+                    equalTo: "#new_password"
+                }
+            },
+            submitHandler: function (form) {
+                /* Get input values from form */
+                var _values = $(form).serializeArray();
+
+                $.ajax({
+                    type: "post",
+                    url: "__URL__/resetPassword",
+                    data: _values,
+                    success: function (rtn){
+                        alert(rtn.info);
+                    }
+                });
+                return false; // required to block normal submit since you used ajax
+            }
+        });
+
+        $("#form").validate({
+            rules: {
+                account: "required",
+                email: {
+                    email: true
+                },
+                nickname: "required",
+                mobile: "isMobile"
+            },
+            submitHandler: function (form) {
+                /* Get input values from form */
+                var values = $(form).serializeArray();
+
+                /* Because serializeArray() ignores unset checkboxes and radio buttons: */
+                var _values = values.concat(
+                    $("#form input[type=checkbox]:not(:checked)").map(
+                        function() {
+                            return {"name": this.name, "value": -1}
+                        }).get()
+                );
+
+                $.ajax({
+                    type: "post",
+                    url: "__URL__/update",
+                    data: _values,
+                    success: function (rtn){
+                        if(rtn.status){
+                            window.setTimeout(function(){
+                                if ( rtn.url != undefined ) {
+                                    window.location.href = rtn.url;
+                                }
+                            }, 2000);
+                        }else{
+                            alert(rtn.info);
+                        }
+                    }
+                });
+                return false; // required to block normal submit since you used ajax
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

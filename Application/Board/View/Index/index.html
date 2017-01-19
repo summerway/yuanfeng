@@ -1,94 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <include file="Public:meta" />
 </head>
-<body style="padding-top: 60px;">
-    <include file="Public:header" />
+<body>
+<include file="Public:navbar" />
 
-<div class="container-fluid">
-    <div class="row-fluid">
-        <include file="Public:lefter" />
+<include file="Public:sidebar" />
+<!-- main container -->
+<div class="content">
+    <!-- settings changer -->
+    <include file="Public:changeTheme" />
 
-        <div class="content iphone-frame-fix" style="margin:0; padding:2px; overflow:hidden;">
-            <iframe id="iframeMain" name="iframeMain" style="width:100%;" frameborder="0" src="{:U('Board/'.$menuNow.'/index')}" onLoad="reinitIframe();"></iframe>
-        </div>
+    <div style="margin:0; padding:2px; overflow:hidden;">
+        <iframe id="iframeMain" name="mainFrame" style="width:100%;" frameborder="0" src="__APP__/Board/Page/index" ></iframe>
     </div>
-    <include file="Public:footer" />
 </div>
 
-<script type="text/javascript" src="__JS__/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="__JS__/bootstrap.js"></script>
-    <script>
-        function reinitIframe(){
-            var iframe = document.getElementById("iframeMain");
-            try{
-                var bHeight = iframe.contentWindow.document.body.scrollHeight;
-                var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
-                var height = Math.max(bHeight, dHeight);
-                iframe.height = height;
-            }catch (ex){}
-        }
+<include file="Public:footer" />
 
-        var timer1 = window.setInterval("reinitIframe()", 500); //定时开始
+<include file="Public:js_basic" />
 
-        function reinitIframeEND(){
-            var iframe = document.getElementById("iframeMain");
-            try{
-                var bHeight = iframe.contentWindow.document.body.scrollHeight;
-                var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
-                var height = Math.max(bHeight, dHeight);
-                iframe.height = height;
-            }catch (ex){}
-// 停止定时
-            window.clearInterval(timer1);
+<script type="text/javascript">
+    function resetFrame(){
+        var iframe = document.getElementById("iframeMain");
+        try{
+            var bHeight = iframe.contentWindow.document.body.scrollHeight;
+            var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+            var height = Math.min(bHeight, dHeight);
+            iframe.height = height;
+        }catch (ex){}
+    }
 
-        }
+    var timer1 = window.setInterval("resetFrame()", 300); //定时开始
 
-        $(function() {
-            // 设置高度
-            $(window).resize(function() {
-                resizeMain();
-            });
+    function reinitIframeEND(){
+        var iframe = document.getElementById("iframeMain");
+        try{
+            var bHeight = iframe.contentWindow.document.body.scrollHeight;
+            var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+            var height = Math.min(bHeight, dHeight);
+            iframe.height = height;
+        }catch (ex){}
+        // 停止定时
+        window.clearInterval(timer1);
+    }
 
-            // 
-            resizeMain();
+    $(function(){
+        resetFrame();
 
-            // 退出后台
-            $("#btn_logout").click(function() {
-                my_show_dialog_confirm("确定要退出后台么？", null, null);
-            });
+        $('#nav_person_info').click(function(){
+            var  bind= $(".nav-personInfo");
+            bind.trigger("click");
+            window.open(bind.find("a").attr('href'),'mainFrame');
+        })
 
-            // 菜单点击
-            $(".menu_item").click(function() {
-                //
-                $(".lefter .cur").removeClass("cur");
-                $(this).addClass("cur");
-                //菜单点击需要强制加上scrolling auto(避免页面中设置scrolling=no,再点击菜单始终为scrolling=no状态
-                var iframe =  document.getElementById("iframeMain");
-                $(iframe).attr("scrolling","auto");
-            });
+        $('body').css('background-color', '#f7f7f7');
+        $("#dark_theme").click(function(){
+            $('body').css('background', 'none');
+        })
+    })
+</script>
 
-            // 菜单滑动
-            $("#accordion").accordion({
-                header : "> div > h3",
-                collapsible: true,
-                heightStyle: "fill"
-            }).sortable({
-                axis : "y",
-                handle : "h3",
-                stop : function(event, ui) {
-                    ui.item.children("h3").triggerHandler("focusout");
-                }
-            });
-
-            // 刷新后打开当前菜单
-            if ( !$(".cur:visible")[0] ) {
-                $(".cur").parents("div.group").children("h3").trigger("click");
-            }
-
-        });
-
-    </script>
 </body>
 </html>

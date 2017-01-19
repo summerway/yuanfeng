@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <include file="Public:meta" />
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="__CSS__/compiled/new-user.css" type="text/css" media="screen" />
+</head>
+<body>
+<div id="pad-wrapper" class="new-user">
+    <div class="row header">
+        <div class="col-md-12">
+            <h3>Create a new user</h3>
+            <a class="btn-flat success return-btn" href="__URL__"> return list </a>
+        </div>
+    </div>
+
+    <div class="row form-wrapper">
+        <!-- left column -->
+        <div class="col-md-12 with-sidebar">
+            <div class="container">
+                <form id="form" class="new_user_form">
+                    <div class="col-md-12 field-box">
+                        <label for="account">Account:</label>
+                        <input class="col-md-6 form-control" type="text" id="account" name="account"/>
+                    </div>
+                    <div class="col-md-12 field-box">
+                        <label for="password">Password:</label>
+                        <input class="col-md-6 form-control" type="password" id="password" name="password"/>
+                    </div>
+                    <div class="col-md-12 field-box">
+                        <label for="repassword">Confirm password:</label>
+                        <input class="col-md-6 form-control" type="password" id="repassword" name="repassword"/>
+                    </div>
+                    <div class="col-md-12 field-box">
+                        <label for="nickname">Nickname:</label>
+                        <input class="col-md-6 form-control" type="text" id="nickname" name="nickname" />
+                    </div>
+                    <div class="col-md-12 field-box">
+                        <label for="email">Email:</label>
+                        <input class="col-md-6 form-control" type="email" id="email" name="email"/>
+                    </div>
+                    <div class="col-md-12 field-box">
+                        <label for="mobile">Phone:</label>
+                        <input class="col-md-6 form-control" type="text" id="mobile" name="mobile"/>
+                    </div>
+                    <div class="col-md-12 field-box">
+                        <label for="status">Active?</label>
+                        <input type="checkbox" value="1" id="status" name="status" checked />
+                    </div>
+                    <div class="col-md-12 field-box textarea">
+                        <label for="notes">Notes:</label>
+                        <textarea class="col-md-6" id="notes" name="notes" placeholder="Field limited to 100 characters" maxlength="100"></textarea>
+                        <p class="form-text-malength"><span id="desc-limit" style="color:red;">0</span>/100</p>
+                    </div>
+                    <div class="col-md-6 field-box actions">
+                        <input type="submit" class="btn-glow primary" value="Create user">
+                        <span>OR</span>
+                        <input type="reset" value="Cancel" class="reset">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--&lt;!&ndash; side right column &ndash;&gt;
+        <div class="col-md-3 form-sidebar pull-right">
+            <div class="btn-group toggle-inputs hidden-tablet">
+                <button class="glow left active" data-input="normal">NORMAL INPUTS</button>
+                <button class="glow right" data-input="inline">INLINE INPUTS</button>
+            </div>
+            <div class="alert alert-info hidden-tablet">
+                <i class="icon-lightbulb pull-left"></i>
+                Click above to see difference between inline and normal inputs on a form
+            </div>
+            <h6>Sidebar text for instructions</h6>
+            <p>Add multiple users at once</p>
+            <p>Choose one of the following file types:</p>
+            <ul>
+                <li><a href="#">Upload a vCard file</a></li>
+                <li><a href="#">Import from a CSV file</a></li>
+                <li><a href="#">Import from an Excel file</a></li>
+            </ul>
+        </div>-->
+    </div>
+</div>
+
+<include file="Public:js_basic" />
+<!-- this page specific script -->
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+<script src="__JS__/additional-methods.js"></script>
+
+<script>
+    $().ready(function() {
+        $("#notes").unbind('keyup change input paste').bind('keyup change input paste',function(){
+            $("#desc-limit").text($(this).val().length);
+        })
+
+
+        $("#form").validate({
+            rules: {
+                account: "required",
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                repassword: {
+                    required: true,
+                    minlength: 6,
+                    equalTo: "#password"
+                },
+                email: {
+                    email: true
+                },
+                nickname: "required",
+                mobile: "isMobile"
+            },
+            submitHandler: function (form) {
+                /* Get input values from form */
+                var values = $(form).serializeArray();
+
+                /* Because serializeArray() ignores unset checkboxes and radio buttons: */
+                var _values = values.concat(
+                    $("#form input[type=checkbox]:not(:checked)").map(
+                        function() {
+                            return {"name": this.name, "value": -1}
+                        }).get()
+                );
+                $.ajax({
+                    type: "post",
+                    url: "__URL__/insert",
+                    data: _values,
+                    success: function (rtn){
+                        if(rtn.status){
+                            window.setTimeout(function(){
+                                if ( rtn.url != undefined ) {
+                                    window.location.href = rtn.url;
+                                }
+                            }, 2000);
+                        }else{
+                            alert(rtn.info);
+                        }
+                    }
+                });
+                return false; // required to block normal submit since you used ajax
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

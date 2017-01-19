@@ -507,7 +507,7 @@ function vendor($class, $baseUrl = '', $ext='.php') {
  * 实例化模型类 格式 [资源://][模块/]模型
  * @param string $name 资源地址
  * @param string $layer 模型层名称
- * @return Model
+ * @return Think\Model
  */
 function D($name='',$layer='') {
     if(empty($name)) return new Think\Model;
@@ -539,7 +539,7 @@ function D($name='',$layer='') {
  * @param string $name Model名称 支持指定基础模型 例如 MongoModel:User
  * @param string $tablePrefix 表前缀
  * @param mixed $connection 数据库连接信息
- * @return Model
+ * @return Think\Model
  */
 function M($name='', $tablePrefix='',$connection='') {
     static $_model  = array();
@@ -1454,5 +1454,35 @@ function think_filter(&$value){
     // 过滤查询特殊字符
     if(preg_match('/^(EXP|NEQ|GT|EGT|LT|ELT|OR|LIKE|NOTLIKE|NOTBETWEEN|NOT BETWEEN|BETWEEN|NOTIN|NOT IN|IN)$/i',$value)){
         $value .= ' ';
+    }
+}
+
+// 自动转换字符集 支持数组转换
+function auto_charset($fContents, $from='gbk', $to='utf-8') {
+    $from = strtoupper($from) == 'UTF8' ? 'utf-8' : $from;
+    $to = strtoupper($to) == 'UTF8' ? 'utf-8' : $to;
+    if (strtoupper($from) === strtoupper($to) || empty($fContents) || (is_scalar($fContents) && !is_string($fContents))) {
+        //如果编码相同或者非字符串标量则不转换
+        return $fContents;
+    }
+    if (is_string($fContents)) {
+        if (function_exists('mb_convert_encoding')) {
+            return mb_convert_encoding($fContents, $to, $from);
+        } elseif (function_exists('iconv')) {
+            return iconv($from, $to, $fContents);
+        } else {
+            return $fContents;
+        }
+    } elseif (is_array($fContents)) {
+        foreach ($fContents as $key => $val) {
+            $_key = auto_charset($key, $from, $to);
+            $fContents[$_key] = auto_charset($val, $from, $to);
+            if ($key != $_key)
+                unset($fContents[$key]);
+        }
+        return $fContents;
+    }
+    else {
+        return $fContents;
     }
 }

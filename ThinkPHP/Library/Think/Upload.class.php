@@ -114,7 +114,8 @@ class Upload {
 
     /**
      * 上传文件
-     * @param 文件信息数组 $files ，通常是 $_FILES数组
+     * @param $files ，通常是 $_FILES数组
+     * @return array|bool
      */
     public function upload($files='') {
         if('' === $files){
@@ -143,7 +144,7 @@ class Upload {
             $finfo   =  finfo_open ( FILEINFO_MIME_TYPE );
         }
         // 对上传文件数组信息处理
-        $files   =  $this->dealFiles($files);    
+        $files   =  $this->dealFiles($files);
         foreach ($files as $key => $file) {
             $file['name']  = strip_tags($file['name']);
             if(!isset($file['key']))   $file['key']    =   $key;
@@ -248,7 +249,7 @@ class Upload {
     /**
      * 设置上传驱动
      * @param string $driver 驱动名称
-     * @param array $config 驱动配置     
+     * @param array $config 驱动配置
      */
     private function setDriver($driver = null, $config = null){
         $driver = $driver ? : ($this->driver       ? : C('FILE_UPLOAD_TYPE'));
@@ -256,13 +257,14 @@ class Upload {
         $class = strpos($driver,'\\')? $driver : 'Think\\Upload\\Driver\\'.ucfirst(strtolower($driver));
         $this->uploader = new $class($config);
         if(!$this->uploader){
-            E("不存在上传驱动：{$name}");
+            E("不存在上传驱动：{$driver}");
         }
     }
 
     /**
      * 检查上传的文件
      * @param array $file 文件信息
+     * @return bool
      */
     private function check($file) {
         /* 文件上传失败，捕获错误代码 */
@@ -338,6 +340,8 @@ class Upload {
     /**
      * 检查文件大小是否合法
      * @param integer $size 数据
+     * @param $size
+     * @return bool
      */
     private function checkSize($size) {
         return !($size > $this->maxSize) || (0 == $this->maxSize);
@@ -346,6 +350,7 @@ class Upload {
     /**
      * 检查上传的文件MIME类型是否合法
      * @param string $mime 数据
+     * @return bool
      */
     private function checkMime($mime) {
         return empty($this->config['mimes']) ? true : in_array(strtolower($mime), $this->mimes);
@@ -354,6 +359,7 @@ class Upload {
     /**
      * 检查上传的文件后缀是否合法
      * @param string $ext 后缀
+     * @return bool
      */
     private function checkExt($ext) {
         return empty($this->config['exts']) ? true : in_array(strtolower($ext), $this->exts);
@@ -362,6 +368,7 @@ class Upload {
     /**
      * 根据上传文件命名规则取得保存文件名
      * @param string $file 文件信息
+     * @return bool
      */
     private function getSaveName($file) {
         $rule = $this->saveName;
@@ -385,7 +392,8 @@ class Upload {
 
     /**
      * 获取子目录的名称
-     * @param array $file  上传的文件信息
+     * @param array $filename 上传的文件信息
+     * @return bool|string
      */
     private function getSubPath($filename) {
         $subpath = '';
