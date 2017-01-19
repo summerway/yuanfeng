@@ -151,6 +151,18 @@
   cursor: pointer;
 }
 
+.verify {
+  margin-left: -2px;
+}
+.verify input{
+  display: inline-block;
+  width: 210px;
+}
+
+.verify img{
+  margin: -5px 0 0 5px;
+}
+
 /* responsive */
 @media (max-width: 767px) {
   .login-wrapper .box {

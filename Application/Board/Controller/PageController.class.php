@@ -8,6 +8,7 @@
 namespace Board\Controller;
 
 use Think\Controller;
+use Think\Verify;
 
 /**
  * Class IndexController
@@ -71,15 +72,30 @@ class PageController extends Controller {
     }
 
     /************** Action ************/
+    /**
+     * 验证码
+     */
+    public function verify()
+    {
+        $verify = new Verify(C('VERIFY_CONF'));
+        $verify->entry();
+    }
+
     public function checkLogin(){
         $post = I('request.');
+
+        //check verify
+        $verify = new Verify();
+        if(!$verify->check($post['verify'])){
+            $this->ajaxReturn(make_rtn('the verify is wrong!'));
+        }
 
         $auth_info = M('rbac_user')->where(['account'=> $post['account']])->field('id,account,password,session_id,nickname,email')->find();
         if(!$auth_info){
             $this->ajaxReturn(make_rtn('account does not exist!'));
         }else{
             if ($auth_info['password'] != hash('md5',$post['password'])) {
-                $this->ajaxReturn(make_rtn('password is invalid!'));
+                $this->ajaxReturn(make_rtn('the password is invalid!'));
             }
 
             clear_last_session($auth_info['session_id']);

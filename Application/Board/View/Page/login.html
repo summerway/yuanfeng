@@ -47,7 +47,10 @@
                 <h6>Log in</h6>
                 <input class="form-control" type="text" name="account" placeholder="Your Account">
                 <input class="form-control" type="password" name="password" placeholder="Your password">
-                <!--<a href="#" class="forgot">Forgot password?</a>-->
+                <div class="verify">
+                    <input class="form-control" type="text" name="verify" placeholder="verify" ><img class="verify" src="{:U(verify)}" alt="verify" onClick="this.src=this.src+'?'+Math.random()" />
+                </div>
+                    <!--<a href="#" class="forgot">Forgot password?</a>-->
                 <div class="remember">
                     <input id="remember-me" name="remember" type="checkbox">
                     <label for="remember-me">Remember me</label>
