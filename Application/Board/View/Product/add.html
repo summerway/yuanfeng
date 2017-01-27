@@ -76,7 +76,7 @@
                     </div>
                     <div class="col-md-12 field-box textarea">
                         <label for="desc">Description:</label>
-                        <textarea class="col-md-6" id="desc" name="desc" placeholder="Field limited to 150 characters" maxlength="150"></textarea>
+                        <textarea class="col-md-6" id="desc" name="descrition" placeholder="Field limited to 150 characters" maxlength="150"></textarea>
                         <p class="form-text-malength"><span id="desc-limit" style="color:red;">0</span>/150</p>
                     </div>
 
@@ -174,7 +174,7 @@
         var $upload_input = $("#upload_input")
 
         $upload_input.fileinput({
-            uploadUrl: "__APP__/Board/Upload/uploadPic?folder=Products",
+            uploadUrl: "__APP__/Board/Upload/uploadPic?folder=Details",
             uploadAsync: false,
             showUpload: false, // hide upload button
             showRemove: false, // hide remove button

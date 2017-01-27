@@ -79,19 +79,21 @@ class ProductController extends CommonController {
                         'name' => $record['image']
                     ]]
                 ];
-                $record['image'] = $product_image;
+                $record['image_show'] = $product_image;
             }else{
-                $record['image'] = [];
+                $record['image_show'] = [];
             }
 
             $detail_list = M('product_img')->where(['product_id'=> $id])->getField('image',true);
-            $detail_img = [];
+            $record['detail_img'] = [];
             if($detail_list){
-                foreach ($detail_list as $img){
-                    $url = __ROOT__.'/Public/Main/image/Products/'.$img;
-                    $size = filesize('Public/Main/image/Products/'.$img);
+                $detail_img = [];
+                foreach ($detail_list as $key=> $img){
+                    $url = __ROOT__.'/Public/Main/image/Details/'.$img;
+                    $size = filesize('Public/Main/image/Details/'.$img);
                     $detail_img['preview'][] = $url;
                     $detail_img['config'][] = [
+                        'key' => $key,
                         'caption'=> $img,
                         'width' => '120px',
                         'url' => __APP__."/Board/Upload/removePic",
@@ -101,10 +103,11 @@ class ProductController extends CommonController {
                             'name' => $img
                         ]
                     ];
+                    $record['detail_img'][] = $img;
                 }
-                $record['detail_img'] = $detail_img;
+                $record['detail_img_show'] = $detail_img;
             }else{
-                $record['detail_img'] = [];
+                $record['detail_img_show'] = [];
             }
 
             $this->ajaxReturn(array('status'=> true,'list'=> $record));
@@ -161,6 +164,20 @@ class ProductController extends CommonController {
         $data = filterParams($request,$tb_fields);
         $rs = $mdl->save($data);
         if($rs !== false ){
+            if(count($request['detail_img_remove']) > 0){
+                M('product_img')->where(['product_id' => $request['id'],'image' => ['in',$request['detail_img_remove']]])->delete();
+            }
+
+            if(count($request['detail_img_insert']) > 0){
+                $img_list = [];
+                foreach ($request['detail_img_insert'] as $img){
+                    $img_list[] = [
+                        'product_id' => $request['id'],
+                        'image' => $img
+                    ];
+                }
+                M('product_img')->addAll($img_list);
+            }
             $this->ajaxReturn(make_url_rtn(Config::UPDATE_COMPLETED_RETURN));
         }else {
             $this->ajaxReturn(make_rtn(Config::UPDATE_FAILED));

@@ -35,7 +35,6 @@ class UserController extends CommonController {
     public function personInfo(){
         $vo = M(self::TABLE)->find(session(C('USER_AUTH_KEY')));
         $this->assign('vo', $vo);
-        //$this->assign ('current_menu',C('NAV_PREFIX').ACTION_NAME);
         $this->display();
     }
 

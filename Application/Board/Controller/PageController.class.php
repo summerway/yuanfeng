@@ -68,7 +68,6 @@ class PageController extends Controller {
      */
     public function calendar(){
         $this->assign('title','Calendar Page');
-        //$this->assign ('current_menu',C('NAV_PREFIX').ACTION_NAME);
         $this->display();
     }
 
@@ -84,7 +83,6 @@ class PageController extends Controller {
 
     public function checkLogin(){
         $post = I('request.');
-
         //check verify
         $verify = new Verify();
         if(!$verify->check($post['verify'])){
@@ -95,7 +93,6 @@ class PageController extends Controller {
         if(!$auth_info){
             $this->ajaxReturn(make_rtn('account does not exist!'));
         }else{
-
             if($cookie = cookie(C('USER_AUTH_KEY'))){
                 //cookie login
                 if ($cookie['password'] != hash('md5',$auth_info['password'].$auth_info['account'])) {
@@ -108,6 +105,7 @@ class PageController extends Controller {
                 }
             }
 
+
             clear_last_session($auth_info['session_id']);
             session(C('USER_AUTH_KEY'),$auth_info['id']);
             session('user_info', filterParams($auth_info,['account','nickname','email']));
@@ -118,7 +116,8 @@ class PageController extends Controller {
 
             //save cookie
             if('on' == $post['remember'] || 1 == $post['remember']){
-                cookie(C('USER_AUTH_KEY'),['account' => $post['account'],'password' => hash('md5',hash('md5',$post['password']).$post['account']),'remember' => $post['remember']],['expire' => 30 * ONE_DAY]);
+                if(!$cookie)
+                    cookie(C('USER_AUTH_KEY'),['account' => $post['account'],'password' => hash('md5',hash('md5',$post['password']).$post['account']),'remember' => $post['remember']],['expire' => 30 * ONE_DAY]);
             }else{
                 cookie(C('USER_AUTH_KEY'),null);
             }

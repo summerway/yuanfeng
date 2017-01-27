@@ -11,7 +11,7 @@ CREATE TABLE `yf_products` (
   `price_kr` int(11) DEFAULT 0 COMMENT 'kry',
   `manufacturer` varchar(200) DEFAULT '' COMMENT '厂商',
   `origin` varchar(100) DEFAULT '' COMMENT '产地',
-  `desc` varchar(300) DEFAULT '' COMMENT '描述',
+  `description` varchar(300) DEFAULT '' COMMENT '描述',
   `image` varchar(255) DEFAULT '' COMMENT '图片url',
   `status` tinyint(4) DEFAULT 1 COMMENT '状态 -1:禁用 1:激活',
   `create_time` int(11) DEFAULT 0 COMMENT '创建时间',
@@ -21,7 +21,7 @@ CREATE TABLE `yf_products` (
 DROP TABLE IF EXISTS `yf_product_img`;
 CREATE TABLE `yf_product_img` (
   `product_id` int(11) NOT NULL DEFAULT 0 COMMENT '产品id',
-  `image` varchar(20) NOT NULL DEFAULT '' COMMENT '详情图片'
+  `image` varchar(300) NOT NULL DEFAULT '' COMMENT '详情图片'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='产品详情表';
 
 DROP TABLE IF EXISTS `yf_rbac_user`;

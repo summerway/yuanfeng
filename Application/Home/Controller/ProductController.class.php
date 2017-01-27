@@ -1,78 +1,136 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: summerway
- * Date: 16/2/21
+ * User: Maple.xia
+ * Date: 17/1/18
  * Time: 下午9:09
  */
+
 namespace Home\Controller;
 
+use Board\Model\Config;
+
 /**
- * 产品介绍
+ * product list
  * Class ProductController
  * @package Home\Controller
  */
 class ProductController extends CommonController
 {
-    /**
-     * 首页
-     */
-    public function index()
-    {
-        //提取左侧导航菜单数据
-        $cate_mdl = M('ProductsCategory');
-        $list = $cate_mdl->where('level = 0')->getField('id,name',true);
+    /************ Page *************/
+    public function index(){
+        $request = I('request.');
+        $this->assign('title', 'product List');
 
-        $data = array();
-        foreach($list as $key => $val){
-            $children = $cate_mdl->where('parent_id =%d',$key)->getField('id,name',true);
-            $data[$key]['id'] = $key;
-            $data[$key]['name'] = $val;
-            $data[$key]['children'] = $children;
+        $param = current(array_keys($request));
+        $conf = Config::getTplConf('pd_'.$param);
+
+        if(C('LANG') == 'CN'){
+            $field = ['category' => '产品分类','type' => '产品类型'];
+            session('path_map','▶ 首页 > '.$field[$param].' > '.$conf[$request[$param]]);
+        }else{
+            session('path_map','▶ Home > Products by'.$param.' > '.$conf[$request[$param]]);
         }
 
-        $this->assign('nav',$data);
-        $this->assign('title', '产品介绍-宁波江东增拓贸易有限公司');
-
-        $this->assign('keywords','宁波脚轮 环球脚轮 江东增拓有限公司 万向轮 液压车 平板车 脚杯 增拓官网');
-        $this->assign('description','宁波江东增拓贸易有限公司是宁波脚轮专业供应商、环球脚轮驻宁波办事处，主要经营万向轮、液压车、平板车、脚杯、不锈钢脚杯。');
         $this->display();
     }
 
-    /**
-     * 产品列表
-     */
-    public function productList(){
-        $get = I('get.');
-
-        $condition = array();
-        if(!empty($get['cate'])){
-            $cate = M('ProductsCategory')->where('parent_id = %d',$get['cate'])->getField('id',true);
-            $condition = array(
-                'category' => array('in',$cate)
-            );
-        }
-
-        if(!empty($get['type'])){
-            $condition['category'] = $get['type'];
-        }
-
-        $pdt_info_mdl = M('ProductsInfo');
-        $count = $pdt_info_mdl->where($condition)->count();
-        $p = new \Org\Util\Page($count,8);
-        $p->setConfig('header', '种脚轮');
-        $p->setConfig('prev', "<");
-        $p->setConfig('next', '>');
-        $p->setConfig('first', '<<');
-        $p->setConfig('last', '>>');
-        $page=$p->show();
-
-        $data = $pdt_info_mdl->where($condition)->limit($p->firstRow.','.$p->listRows)->select();
-        $this->assign('page', $page);
-        $this->assign('products',$data);
-
-        $this->display('show');
-
+    public function detailList(){
+        $this->display();
     }
 
+
+    /************ Action *************/
+    /**
+     *
+     */
+    public function dataList()
+    {
+        $request = I('request.');
+
+        $page = $request['page']  ? $request['page'] -1 : 0;
+        $listRows = 16;
+
+        $mdl = M('products');
+        $tb_fields = $mdl->getDbFields();
+        $condition = filterParams($request,$tb_fields);
+        $condition['status'] = 1; //status active
+
+        $totalRows = $mdl->where($condition)->count('id');
+        $list = $mdl->where($condition)->limit($page.",".$listRows)->select();
+        if($list){
+            $size_conf = Config::getTplConf('PD_SIZE');
+
+            //convert data
+            foreach ($list as &$val) {
+                $val['image'] = $val['image'] ?  __ROOT__ ."/Public/Main/image/Products/" . $val['image'] : __ROOT__ ."/Public/Main/image/" . "no-img-gallery.png";
+                $val['size'] = $size_conf[$val['size']];
+                $val['price'] = C('LANG') == 'CN' ? "&yen;<strong>".$val['price_cn']."</strong>元" : "&#8361;<strong>".$val['price_kr']."</strong>won";
+                $val['detail_url'] = __CONTROLLER__.'/detailList?id='.$val['id'];
+            }
+
+            $this->ajaxReturn(array('status'=>true,'list'=>$list,'max_page'=> ceil($totalRows / $listRows)));
+        }else{
+            $this->ajaxReturn(make_rtn(Config::NO_DATA));
+        }
+    }
+
+    public function ajaxProductBaseInfo(){
+        $request = I('request.');
+        $data = M('products')->field('image,name,size,code,price_cn,price_kr,manufacturer,origin')
+            ->where(['status' => 1,'id' => $request['id']])->find();
+
+
+        //data convert
+        if($data){
+            $size_conf = Config::getTplConf('PD_SIZE');
+            $data['image'] = $data['image'] ?  __ROOT__ ."/Public/Main/image/Products/" . $data['image'] : __ROOT__ ."/Public/Main/image/" . "no-img-gallery.png";
+            $data['size'] = $size_conf[$data['size']];
+            $data['price'] = C('LANG') == 'CN' ? "价格：&yen; ".$data['price_cn']."元" : "Price：&#8361; ".$data['price_kr']."won";
+            $data['code'] = (C('LANG') == 'CN' ? '产品编号：' : 'code：' ).$data['code'] ;
+            $data['manufacturer'] = (C('LANG') == 'CN' ? '生产厂商：' : 'manufacturer：' ).$data['manufacturer'];
+            $data['origin'] = (C('LANG') == 'CN' ? '原产地：' : 'origin：' ). $data['origin'];
+            $this->ajaxReturn(array('status'=>true,'list'=>$data ));
+        }else{
+            $this->ajaxReturn(make_rtn(Config::NO_DATA));
+        }
+    }
+
+    public function ajaxProductDescInfo(){
+        $images = M('product_img')->where(['product_id' => I('request.id')])->field('concat(\''. __ROOT__ ."/Public/Main/image/details/" .'\',image) as image')->select();
+        if($images){
+            $this->ajaxReturn(array('status'=> true,'list'=> $images ));
+        }else{
+            $this->ajaxReturn(make_rtn(Config::NO_DATA));
+        }
+    }
+
+    public function ajaxRelationProduct(){
+        $product_id = I('request.id');
+
+        $property = M('products')->field('type,category')->find($product_id);
+        $condition = [
+            'id' => ['neq',$product_id],
+            '_string' => " type = {$property['type']} or category = {$property['category']}"
+        ];
+        $relation_list = M("products")->where($condition)->field('id,name,code,price_cn,price_kr,image')->order(" rand() ")->limit(6)->select();
+
+        //data convert
+        if($relation_list){
+            foreach($relation_list as &$val){
+                $val['price'] =  C('LANG') == 'CN' ? "价格: &yen;<strong>".$val['price_cn']."</strong>元" : "Price: &#8361;<strong>".$val['price_kr']."</strong>won";
+                $val['code'] = (C('LANG') == 'CN' ? '产品编号: ' : 'code: ' ) . $val['code'];
+                $val['detail_url'] = __CONTROLLER__.'/detailList?id='.$val['id'];
+                $val['image_url'] = $val['image'] ?  __ROOT__ ."/Public/Main/image/Products/" . $val['image'] : __ROOT__ ."/Public/Main/image/" . "no-img-gallery.png";
+
+            }
+            $this->ajaxReturn(array('status'=> true,'list'=> $relation_list ,'title' => C('LANG') == 'CN' ? '相关产品' : 'Relation Product'));
+        }else{
+            $this->ajaxReturn(make_rtn(Config::NO_DATA));
+        }
+    }
+
+    public function ajaxPathMap(){
+        $this->ajaxReturn(['status' => true,'list' => session('path_map')]);
+    }
 }

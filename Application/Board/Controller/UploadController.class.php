@@ -20,7 +20,7 @@ class UploadController extends CommonController{
         $upload = new UploadFile();
 
         //设置上传文件大小
-        $upload->maxSize = MAX_SIZE;
+        $upload->maxSize = self::MAX_SIZE;
         // 设置上传文件类型
         $upload->allowExts =  ['jpg', 'gif', 'png', 'jpeg'];
         // 禁止自动使用子目录

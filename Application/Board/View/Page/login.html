@@ -9,6 +9,7 @@
     
     
 </head>
+
 <body>
 <!-- background switcher -->
 <div class="bg-switch visible-desktop">
@@ -83,6 +84,7 @@
             var ev = document.all ? window.event : e;
             if(ev.keyCode==13)
             {
+                $("input").blur();
                 $("#verify").trigger("click");
             }
         }
@@ -144,7 +146,6 @@
             type: "post",
             url: "__URL__/ajaxLoginInfo",
             success: function (rtn){
-                console.info(rtn)
                 if(rtn.status){
                     $("input[name='account']").val(rtn.list['account']);
                     $("input[name='password']").val(rtn.list['password']);

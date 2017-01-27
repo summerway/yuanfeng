@@ -13,10 +13,7 @@ const ONE_DAY = 86400;    // 1天的时间戳数值
 const ONE_HOUR = 3600;      // 1小时时间戳数值
 
 return array(
-    //page
-    'VAR_PAGE' => 'p',
-
-    'NAV_PREFIX' => 'nav-',
+    'LANG' => 'CN',
 
     //verify
     'VERIFY_CONF' => [
