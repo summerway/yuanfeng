@@ -49,7 +49,7 @@ class ProductController extends CommonController
         $request = I('request.');
 
         $page = $request['page']  ? $request['page'] -1 : 0;
-        $listRows = 16;
+        $listRows = 20;
 
         $mdl = M('products');
         $tb_fields = $mdl->getDbFields();
@@ -64,7 +64,7 @@ class ProductController extends CommonController
             //convert data
             foreach ($list as &$val) {
                 $val['image'] = $val['image'] ?  __ROOT__ ."/Public/Main/image/Products/" . $val['image'] : __ROOT__ ."/Public/Main/image/" . "no-img-gallery.png";
-                $val['size'] = $size_conf[$val['size']];
+                $val['size'] = $val['size'] ? '('.$size_conf[$val['size']].')' : '';
                 $val['price'] = C('LANG') == 'CN' ? "&yen;<strong>".$val['price_cn']."</strong>元" : "&#8361;<strong>".$val['price_kr']."</strong>won";
                 $val['detail_url'] = __CONTROLLER__.'/detailList?id='.$val['id'];
             }
@@ -85,12 +85,12 @@ class ProductController extends CommonController
         if($data){
             $size_conf = Config::getTplConf('PD_SIZE');
             $data['image'] = $data['image'] ?  __ROOT__ ."/Public/Main/image/Products/" . $data['image'] : __ROOT__ ."/Public/Main/image/" . "no-img-gallery.png";
-            $data['size'] = $size_conf[$data['size']];
+            $data['size'] = $data['size'] ? '('.$size_conf[$data['size']].')' : '';
             $data['price'] = C('LANG') == 'CN' ? "价格：&yen; ".$data['price_cn']."元" : "Price：&#8361; ".$data['price_kr']."won";
             $data['code'] = (C('LANG') == 'CN' ? '产品编号：' : 'code：' ).$data['code'] ;
             $data['manufacturer'] = (C('LANG') == 'CN' ? '生产厂商：' : 'manufacturer：' ).$data['manufacturer'];
             $data['origin'] = (C('LANG') == 'CN' ? '原产地：' : 'origin：' ). $data['origin'];
-            $this->ajaxReturn(array('status'=>true,'list'=>$data ));
+            $this->ajaxReturn(array('status'=>true,'list'=> $data ));
         }else{
             $this->ajaxReturn(make_rtn(Config::NO_DATA));
         }

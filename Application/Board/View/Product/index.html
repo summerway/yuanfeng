@@ -18,8 +18,12 @@
             <div class="col-md-10 search-list">
                 <dl >
                     <dt>Name</dt>
-                    <input type="text" class="col-md-5 search" placeholder="type product name" value="">
+                    <input id="name" type="text" class="col-md-5 search" placeholder="type product name" value="">
                     <a class="btn-flat primary pull-right" id="btn_search">Search</a>
+                </dl>
+                <dl >
+                    <dt>Code</dt>
+                    <input id="code" type="text" class="search" placeholder="type product code" value="">
                 </dl>
                 <dl>
                     <dt>Status</dt>
@@ -180,6 +184,7 @@
 
     function loadList(page){
         var _name = $("#name").val();
+        var _code = $("#code").val();
         var _type = $("#type").val();
         var _cate = $('#category').val();
         var _status = $("#status").val();
@@ -189,7 +194,7 @@
         $.ajax({
             type: "POST",
             url: "__URL__/dataList",
-            data: {name:_name,type:_type, category:_cate,size:_size,status:_status,page:page,listRows:_listRows},
+            data: {name:_name,code:_code,type:_type, category:_cate,size:_size,status:_status,page:page,listRows:_listRows},
             dataType: "json",
             success: function(data){
                 if(data.status){

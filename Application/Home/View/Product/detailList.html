@@ -94,7 +94,7 @@
                     $("#pd_image").empty().append(img);
 
                     var info = '';
-                    info+= '<h2>'+ list['name'] +'('+ list['size'] +')</h2>';
+                    info+= '<h2>'+ list['name'] + list['size'] +'</h2>';
                     info+= '<p>'+ list['code'] + '</p>';
                     info+= '<p class="pd_price">'+ list['price'] + '</p>';
                     info+= '<p>'+ list['manufacturer'] + '</p>';
@@ -139,7 +139,7 @@
                 if(rtn.status){
                     var list = rtn['list'];
 
-                    var html = '<h2 class="text-center">' + rtn['title'] + '</h2>';
+                    var html = '<h2 class="text-center">' + rtn['title'] + '</h2><hr/>';
                     $.each(list,function(index,value){
                         html += '<div class="col-xs-6 col-lg-4"><a href="' + value['detail_url'] +'">';
                         html += '<img class="list_pic_m" src="'+ value['image_url'] +'" /></a> ';

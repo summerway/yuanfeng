@@ -56,11 +56,13 @@
 
 
     function getProductList(page){
-        var product_cate = getUrlParameter('category');
+        var _category = getUrlParameter('category');
+        var _type = getUrlParameter('type');
+
         $.ajax({
             type: "post",
             url: "__URL__/dataList",
-            data: {category:product_cate,page:page},
+            data: {category:_category,type:_type,page:page},
             success: function (rtn){
                 if(rtn.status){
                     var element = $("#pd_list");
@@ -69,7 +71,7 @@
                     $.each(rtn.list,function(index,value){
                         html += '<div class="col-xs-6 col-lg-3">';
                         html += '<a href="'+ value['detail_url'] +'"><img src="'+ value['image'] +'" class="pd-img"/></a>';
-                        html += '<p>'+ value['name'] +'(' + value['size'] + ')</p>';
+                        html += '<p>'+ value['name']  + value['size'] + '</p>';
                         html += '<p>Product Code: '+ value['code'] + '</p>';
                         html +=  value['price'];
                         html += '<img src="__IMG__/HomePage/g_03.gif"/></p></div>';

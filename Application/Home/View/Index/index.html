@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <include file="Public:header" />
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="__PUBLIC__/Main/css/home.css" type="text/css" media="screen" />
 </head>
 
 <body>
@@ -123,11 +125,10 @@
                 if(rtn.status){
                     var list = rtn.list;
                     $.each(list,function(index,type_pd){
-                        var html ='<div class="col-xs-6 col-lg-6" style="height: 660px;margin: 5px 0"> '
-                            + '<img src="__IMG__/HomePage/m_9.gif"/> '
+                        var html ='<div class="col-xs-6 col-lg-6" style="height:670px;margin: 5px 0;"> '
+                            + '<img class="type_border" src="__IMG__/HomePage/m_9.gif"/> '
                             + '<span class="type_title">' + type_pd['type_show'] + '</span>'
-                            + '<a href="'+ type_pd['link'] +'"><img src="__IMG__/HomePage/m_11.gif"/></a>'
-                            + '<img src="__IMG__/HomePage/m_12.gif" style="margin-left: 120px; "/>'
+                            + '<a href="'+ type_pd['link'] +'"><img class="type_more" src="__IMG__/HomePage/m_11.gif"/></a>'
                             + '<a href="'+ type_pd['link'] +'"><img class="blue-img" src="'+ type_pd['image'] +'" /></a>';
 
                             html+= '<div class="row">';
@@ -136,7 +137,7 @@
                                 html += '<a href="'+ pd['link'] +'"><img src="'+ pd['image'] +'" class="list_pic_s"></a>';
                                 html += '<p>' + pd['name'] + pd['size'] + '</p>';
                                 html += '<p>' + pd['code'] + '</p>';
-                                html += '<p><img style="width: 12px;" src="'+ pd['price_img'] +'" /> <strong>'+ pd['price'] +'</strong>';
+                                html += '<p><img class="type_pr_img" " src="'+ pd['price_img'] +'" /> <span class="type_price">'+ pd['price'] +'</span>';
                                 html+= '</div>';
                             })
 

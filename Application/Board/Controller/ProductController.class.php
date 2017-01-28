@@ -45,6 +45,10 @@ class ProductController extends CommonController {
         $mdl = M(self::TABLE);
         $tb_fields = $mdl->getDbFields();
         $condition = filterParams($request,$tb_fields);
+        if(isset($condition['code'])){
+            unset($condition['code']);
+            $condition['code'] = ['like','%'.strtoupper($request['code']).'%'];
+        }
 
         $totalRows = $mdl->where($condition)->count('id');
         $list = $mdl->where($condition)->limit($page.",".$listRows)->select();
@@ -55,7 +59,7 @@ class ProductController extends CommonController {
             $val['image'] = $val['image'] ?  __ROOT__ ."/Public/Main/image/Products/" . $val['image'] : __ROOT__ ."/Public/Main/image/" . "no-img-gallery.png";
             $val['type'] = $conf['type'][$val['type']];
             $val['category'] = $conf['category'][$val['category']];
-            $val['size'] = $conf['size'][$val['size']];
+            $val['size'] = $conf['size'][$val['size']] ? : "";
         }
 
         $this->ajaxReturn(array('status'=>true,'list'=>$list ? : false,'max_page'=> ceil($totalRows / $listRows)));
