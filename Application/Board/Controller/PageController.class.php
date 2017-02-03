@@ -21,7 +21,7 @@ class PageController extends Controller {
     /**
      * 默认首页
      */
-    public function Index(){
+    public function index(){
         $info = array (
             'Operating System' => PHP_OS,
             'Operating Environment' => $_SERVER ["SERVER_SOFTWARE"],
