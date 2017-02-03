@@ -1,0 +1,43 @@
+label.error {
+    color:#c73939;
+    width: 300px !important;
+    margin-left: 10px;
+    line-height: 25px
+}
+
+.return-btn {
+    margin:5px 15px;
+}
+
+.form-text-malength {
+    line-height: 30px;
+    color: #999;
+}
+
+.search-list { float:right; text-align:right; }
+.search-list dl { float:right; margin:0 10px 5px 0; height:25px; }
+.search-list dl dt { float:left; padding:3px 5px; }
+.search-list .btn-flat { margin:-3px 0 0 10px ;}
+
+a[data-title]:hover:after {
+    content: attr(data-title);
+    padding: 4px 8px;
+    color: #333;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    white-space: nowrap;
+    z-index: 10;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0px 0px 4px #222;
+    -webkit-box-shadow: 0px 0px 4px #222;
+    box-shadow: 0px 0px 4px #222;
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #eeeeee),color-stop(1, #cccccc));
+    background-image: -webkit-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -ms-linear-gradient(top, #eeeeee, #cccccc);
+    background-image: -o-linear-gradient(top, #eeeeee, #cccccc);
+}

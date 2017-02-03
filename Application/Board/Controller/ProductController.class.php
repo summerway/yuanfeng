@@ -50,6 +50,11 @@ class ProductController extends CommonController {
             $condition['code'] = ['like','%'.strtoupper($request['code']).'%'];
         }
 
+        if(isset($condition['name'])){
+            unset($condition['name']);
+            $condition['name'] = ['like','%'.strtoupper($request['name']).'%'];
+        }
+
         $totalRows = $mdl->where($condition)->count('id');
         $list = $mdl->where($condition)->limit($page.",".$listRows)->select();
         $conf = Config::getProductConf();

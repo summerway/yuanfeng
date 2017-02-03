@@ -18,9 +18,11 @@ use Board\Model\Config;
 class ProductController extends CommonController
 {
     /************ Page *************/
+    /**
+     * 分类列表页
+     */
     public function index(){
         $request = I('request.');
-        $this->assign('title', 'product List');
 
         $param = current(array_keys($request));
         $conf = Config::getTplConf('pd_'.$param);
@@ -32,18 +34,56 @@ class ProductController extends CommonController
             session('path_map','▶ Home > Products by'.$param.' > '.$conf[$request[$param]]);
         }
 
+        $this->assign('title', 'product List');
         $this->display();
     }
 
+    /**
+     * 产品详情页
+     */
     public function detailList(){
         $this->display();
     }
 
+    /**
+     * 产品索引页
+     */
+    public function search(){
+        $display = C('LANG') == 'CN' ?  ACTION_NAME .'_cn' : ACTION_NAME;
+        $this->display($display);
+    }
 
     /************ Action *************/
-    /**
-     *
-     */
+
+    public function searchList(){
+        $request = I('request.');
+
+        $page = $request['page']  ? $request['page'] -1 : 0;
+        $listRows = $request['listRows'];
+
+        $mdl = M('products');
+        $tb_fields = $mdl->getDbFields();
+        $condition = filterParams($request,$tb_fields);
+        if(isset($request['keyword']) && count($request['keyword']) > 0){
+            $condition['_string'] = " name like '%".$request['keyword']."%' ".
+                " or code like '%". $request['keyword'] ."%'";
+        }
+
+        $totalRows = $mdl->where($condition)->count('id');
+        $list = $mdl->where($condition)->limit($page.",".$listRows)->select();
+        $conf = Config::getProductConf();
+
+        //convert data
+        foreach ($list as &$val) {
+            $val['image'] = $val['image'] ?  __ROOT__ ."/Public/Main/image/Products/" . $val['image'] : __ROOT__ ."/Public/Main/image/" . "no-img-gallery.png";
+            $val['type'] = $conf['type'][$val['type']];
+            $val['category'] = $conf['category'][$val['category']];
+            $val['size'] = $conf['size'][$val['size']] ? : "";
+        }
+
+        $this->ajaxReturn(array('status'=>true,'list'=>$list ? : false,'max_page'=> ceil($totalRows / $listRows)));
+    }
+
     public function dataList()
     {
         $request = I('request.');
@@ -80,7 +120,6 @@ class ProductController extends CommonController
         $data = M('products')->field('image,name,size,code,price_cn,price_kr,manufacturer,origin')
             ->where(['status' => 1,'id' => $request['id']])->find();
 
-
         //data convert
         if($data){
             $size_conf = Config::getTplConf('PD_SIZE');
@@ -97,7 +136,7 @@ class ProductController extends CommonController
     }
 
     public function ajaxProductDescInfo(){
-        $images = M('product_img')->where(['product_id' => I('request.id')])->field('concat(\''. __ROOT__ ."/Public/Main/image/details/" .'\',image) as image')->select();
+        $images = M('product_img')->where(['product_id' => I('request.id')])->field('concat(\''. __ROOT__ ."/Public/Main/image/Details/" .'\',image) as image')->select();
         if($images){
             $this->ajaxReturn(array('status'=> true,'list'=> $images ));
         }else{
@@ -132,5 +171,14 @@ class ProductController extends CommonController
 
     public function ajaxPathMap(){
         $this->ajaxReturn(['status' => true,'list' => session('path_map')]);
+    }
+
+    /**
+     * 配置传参
+     * @return array
+     */
+    public function ajaxConf(){
+        $conf = Config::getProductConf();
+        $this->ajaxReturn(['status' => true,'list' => $conf]);
     }
 }

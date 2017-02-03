@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    <!-- Users table -->
+    <!-- Product table -->
     <div class="row">
         <div class="col-md-12">
             <table class="table table-hover" id="product_list">
@@ -119,7 +119,7 @@
         <a href="#" class="next" data-action="next">&rsaquo;</a>
         <a href="#" class="last" data-action="last">&raquo;</a>
     </div>
-    <!-- end users table -->
+    <!-- end Product table -->
 </div>
 
 <include file="Public:js_basic" />
@@ -153,12 +153,10 @@
         //event
         $('#btn_search').click(function(){
             loadList(1);
-            return;
         })
 
         $("#list-rows").change(function(){
             loadList(1);
-            return;
         })
 
         $(document).on("click", "a[name='cs-btn']", function(){

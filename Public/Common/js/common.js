@@ -21,6 +21,14 @@ function getUrlParameter(sParam) {
 
 $(function(){
     getNavmenu();
+
+    $("#global_search").click(function(){
+        var key = $("#global_key").val();
+        if(key.length > 0){
+            console.info(APP_PATH +'/Home/Product/search?key='+ key)
+            window.location.href= APP_PATH +'/Home/Product/search?key='+ key;
+        }
+    })
 })
 
 

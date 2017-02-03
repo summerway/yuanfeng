@@ -23,7 +23,7 @@
 
     <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-12 col-sm-10">
-            <img src="__IMG__/Products/c_top_31.jpg" />
+            <dd id="pd_banner"></dd>
             <label class="path_map"></label>
             <div class="row list_product" id="pd_list">
 
@@ -50,14 +50,28 @@
 
 <script>
     $(function(){
+        // url get params
+        var category = getUrlParameter('category');
+        var type = getUrlParameter('type');
+
         pathMap();
-        getProductList(1);
+        getBanner(category,type);
+        getProductList(1,category,type);
     })
 
+    function getBanner(category,type){
+        var banner = 'default_banner.jgp';
+        if(category != undefined)
+            banner = 'c_ban'+category+'.jpg';
 
-    function getProductList(page){
-        var _category = getUrlParameter('category');
-        var _type = getUrlParameter('type');
+        if(type != undefined)
+            banner = 't_ban'+type+'.jpg';
+        var html = '<img src="__IMG__/Products/'+ banner +'" />';
+
+        $('#pd_banner').append(html);
+    }
+
+    function getProductList(page,_category,_type){
 
         $.ajax({
             type: "post",
@@ -73,8 +87,7 @@
                         html += '<a href="'+ value['detail_url'] +'"><img src="'+ value['image'] +'" class="pd-img"/></a>';
                         html += '<p>'+ value['name']  + value['size'] + '</p>';
                         html += '<p>Product Code: '+ value['code'] + '</p>';
-                        html +=  value['price'];
-                        html += '<img src="__IMG__/HomePage/g_03.gif"/></p></div>';
+                        html +=  value['price'] + '</p></div>';
                     });
 
                     element.append(html);
@@ -107,7 +120,6 @@
                 }
             }
         });
-        return;
     }
 </script>
 </body>

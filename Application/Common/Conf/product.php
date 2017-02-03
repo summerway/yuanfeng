@@ -24,9 +24,11 @@ return array(
 
     //category
     'PD_CATEGORY' => [
-        1 => 'Promotion / Inauguration',
+        //1 => 'Promotion / Inauguration',
+        1 => 'Promotion',
         2 => 'Opening / Moving',
-        3 => 'Performance / Exhibition',
+        //3 => 'Performance / Exhibition',
+        3 => 'Exhibition',
         4 => 'Birthday / Birth',
         5 => 'Congratulations',
         100 => 'Other'
