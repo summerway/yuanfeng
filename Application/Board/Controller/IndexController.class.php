@@ -19,6 +19,7 @@ class IndexController extends CommonController {
      */
     public function index(){
         $this->assign("title","Home Page");
+        $this->assign("nickname",$_SESSION['user_info']['nickname']);
         $this->display();
     }
 }
